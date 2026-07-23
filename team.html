@@ -266,6 +266,26 @@ section{position:relative;z-index:2;padding:20px 0;}
   border-right:1px solid var(--line2);
 }
 
+/* ---------- Dedicated Scrollbar for Modal Body ---------- */
+.modal-body-pad::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body-pad::-webkit-scrollbar-track {
+  background: rgba(9, 13, 26, 0.6);
+  border-radius: 0 0 16px 0;
+  margin: 12px 0;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb {
+  background: rgba(94, 224, 255, 0.25);
+  border-radius: 10px;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+}
+
 .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--line2),transparent);margin:20px 0;}
 
 footer{border-top:1px solid var(--line);padding:70px 0 30px;position:relative;z-index:2;margin-top:60px;background:rgba(3,8,22,.6);backdrop-filter:blur(10px);}

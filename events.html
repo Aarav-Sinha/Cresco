@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  
 :root{
   --ink:#030816;--navy:#060f2c;--panel:rgba(13,20,38,.5);--panel-solid:#0b1120;
   
@@ -66,7 +67,55 @@ a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;} ul,ol{
   z-index: 2;
 }
 #eventHoverBg.active { opacity: 0.55; }
+/* ---------- Aesthetic Custom Scrollbars ---------- */
+/* Global Webkit Scrollbar (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
+::-webkit-scrollbar-track {
+  background: var(--ink);
+  border-left: 1px solid var(--line);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 170, 255, 0.2);
+  border-radius: 4px;
+  border: 1px solid var(--line2);
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+  box-shadow: 0 0 10px var(--electric);
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(140, 170, 255, 0.3) var(--ink);
+}
+
+/* ---------- Dedicated Scrollbar for Modal Body ---------- */
+.modal-body-pad::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body-pad::-webkit-scrollbar-track {
+  background: rgba(9, 13, 26, 0.6);
+  border-radius: 0 0 16px 0;
+  margin: 12px 0;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb {
+  background: rgba(94, 224, 255, 0.25);
+  border-radius: 10px;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+}
 .ticker-bar{position:fixed;top:0;left:0;right:0;z-index:90;height:32px;overflow:hidden;backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);background:rgba(3,8,22,.7);border-bottom:1px solid var(--line);display:flex;align-items:center;}
 .ticker-track{display:flex;white-space:nowrap;animation:tickerScroll 34s linear infinite;}
 .ticker-track span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);padding:0 24px;display:inline-flex;align-items:center;gap:10px;}
@@ -275,8 +324,58 @@ a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;} ul,ol{
 .modal-section{margin-top:26px;}
 .modal-section h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;}
 .modal-desc{color:var(--dim);line-height:1.8;}
-.modal-rules{color:var(--dim);line-height:1.95;padding-left:22px;}
-.modal-rules li{margin-bottom:8px;}
+/* ---------- Aesthetic Rules List Styling ---------- */
+.modal-rules {
+  list-style: none; /* Remove plain browser numbers */
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  counter-reset: rule-counter;
+}
+
+.modal-rules li {
+  position: relative;
+  counter-increment: rule-counter;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--electric);
+  border-radius: 10px;
+  padding: 12px 16px 12px 48px;
+  font-size: 0.93rem;
+  color: var(--dim);
+  line-height: 1.6;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s, background 0.3s, transform 0.2s;
+}
+
+/* Custom glowing index badge */
+.modal-rules li::before {
+  content: counter(rule-counter, decimal-leading-zero);
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--electric);
+  letter-spacing: 0.05em;
+  opacity: 0.85;
+}
+
+/* Interactive subtle lift & accent on hover */
+.modal-rules li:hover {
+  background: rgba(94, 224, 255, 0.05);
+  border-color: var(--line2);
+  border-left-color: var(--amber);
+  color: var(--paper);
+  transform: translateX(4px);
+}
+
+.modal-rules li:hover::before {
+  color: var(--amber);
+  opacity: 1;
+}
 .modal-heads{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
 .modal-head-pill{font-family:var(--mono);font-size:10.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line2);color:var(--dim);}
 
@@ -931,8 +1030,15 @@ function openModal(ev) {
   document.getElementById('modalVenue').innerText = ev.venue;
   document.getElementById('modalDesc').innerText = ev.desc;
 
+  // Dynamically set accent color based on world
+  const accentColor = ev.world === 'myth' ? 'var(--myth)' : (ev.world === 'cosmos' ? 'var(--cosmos)' : 'var(--eco)');
+
   const rulesList = document.getElementById('modalRules');
-  rulesList.innerHTML = ev.rules.map(rule => `<li>${rule}</li>`).join('');
+  rulesList.innerHTML = ev.rules.map(rule => `
+    <li style="border-left-color: ${accentColor};">
+      ${rule}
+    </li>
+  `).join('');
 
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
