@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#030816">
+<meta name="robots" content="noindex, nofollow">
+<title>Mission Control — Cresco Scientiam Admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23030816'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%231c39bb' stroke-width='3'/%3E%3Ccircle cx='50' cy='16' r='4' fill='%235ee0ff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#030816;--navy:#060f2c;--panel:rgba(13,20,38,.5);--panel-solid:#0b1120;
+  --line:rgba(140,170,255,.11);--line2:rgba(140,170,255,.26);--line3:rgba(140,170,255,.4);
+  --blue:#1c39bb;--electric:#5ee0ff;--amber:#ffb648;--alert:#ef4a5a;--good:#2ecc71;
+  --paper:#eef2fb;--dim:rgba(238,242,251,.62);--faint:rgba(238,242,251,.34);
+  --disp:'Poppins',sans-serif;--ui:'Space Grotesk',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{overflow-x:hidden;}
+body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:16px;line-height:1.5;min-height:100svh;-webkit-font-smoothing:antialiased;}
+a{color:inherit;} img{max-width:100%;display:block;} ul,ol{list-style:none;} button,input,textarea,select{font:inherit;color:inherit;}
+::selection{background:rgba(28,57,187,.4);color:#fff;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 40% at 82% -6%, rgba(28,57,187,.18), transparent 60%),radial-gradient(ellipse 46% 36% at -4% 30%, rgba(94,224,255,.08), transparent 60%);}
+.glass{backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);background:rgba(16,23,45,.5);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 50px -20px rgba(0,0,0,.6);}
+
+/* ---------- auth gate ---------- */
+#authGate,#deniedGate{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-card{width:min(420px,100%);border-radius:22px;padding:44px 36px;text-align:center;}
+.auth-logo{display:flex;justify-content:center;gap:6px;margin-bottom:22px;}
+.auth-cell{width:36px;height:26px;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;}
+.auth-cell:nth-child(1){background:linear-gradient(140deg,#6f9bff,var(--blue));color:#fff;}
+.auth-cell:nth-child(2){background:linear-gradient(140deg,var(--electric),var(--blue));color:#031;}
+.auth-cell:nth-child(3){background:linear-gradient(140deg,var(--blue),#0d1f6e);color:#fff;}
+.auth-card h1{font-family:var(--disp);font-weight:800;font-size:1.5rem;}
+.auth-card p{color:var(--dim);margin-top:10px;font-size:.92rem;}
+.google-btn{margin-top:28px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:12px;background:#fff;color:#1f1f1f;font-weight:600;font-size:.95rem;cursor:pointer;border:none;transition:transform .2s,box-shadow .2s;}
+.google-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px -10px rgba(0,0,0,.5);}
+.google-btn:active{transform:scale(.98);}
+.auth-note{margin-top:20px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.05em;}
+.denied-icon{width:56px;height:56px;border-radius:50%;background:rgba(239,74,90,.15);border:1px solid rgba(239,74,90,.4);display:grid;place-items:center;margin:0 auto 18px;color:var(--alert);}
+.signout-link{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--electric);text-transform:uppercase;cursor:pointer;}
+
+/* ---------- dashboard ---------- */
+#dashboard{display:none;position:relative;z-index:2;min-height:100svh;}
+.admin-shell{display:flex;min-height:100svh;}
+.sidebar{width:250px;flex-shrink:0;border-right:1px solid var(--line);padding:26px 18px;display:flex;flex-direction:column;position:sticky;top:0;height:100svh;overflow-y:auto;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:0 6px 22px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+.sb-brand b{font-family:var(--disp);font-weight:800;font-size:.95rem;}
+.sb-brand span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--faint);margin-top:2px;}
+.sb-nav{display:flex;flex-direction:column;gap:2px;flex:1;}
+.sb-btn{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;background:none;border:none;color:var(--dim);text-align:left;cursor:pointer;font-size:13.5px;font-weight:500;transition:background .2s,color .2s;}
+.sb-btn:hover{background:rgba(94,224,255,.06);color:var(--paper);}
+.sb-btn.active{background:linear-gradient(120deg,rgba(28,57,187,.35),rgba(94,224,255,.12));color:var(--paper);}
+.sb-btn svg{flex-shrink:0;opacity:.7;}
+.sb-user{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+.sb-user img{width:32px;height:32px;border-radius:50%;}
+.sb-user-info{flex:1;min-width:0;}
+.sb-user-info b{display:block;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-user-info span{display:block;font-family:var(--mono);font-size:9px;color:var(--faint);}
+.sb-signout{background:none;border:none;color:var(--alert);cursor:pointer;font-size:11px;}
+
+.admin-main{flex:1;padding:36px clamp(20px,4vw,48px);max-width:1100px;}
+.admin-header{margin-bottom:28px;}
+.admin-header h2{font-family:var(--disp);font-weight:800;font-size:1.6rem;}
+.admin-header p{color:var(--dim);margin-top:6px;font-size:.92rem;}
+.admin-panel{display:none;}
+.admin-panel.active{display:block;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;}
+.field-row.single{grid-template-columns:1fr;}
+.field-row.three{grid-template-columns:1fr 1fr 1fr;}
+label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:5px;}
+input[type=text],input[type=email],input[type=password],input[type=url],textarea,select{
+  width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;font-size:13.5px;outline:none;transition:border-color .2s;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--electric);}
+textarea{resize:vertical;min-height:60px;}
+.item-card{border:1px solid var(--line2);border-radius:14px;padding:18px;margin-bottom:14px;position:relative;background:rgba(255,255,255,.015);}
+.item-card .item-remove{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;background:rgba(239,74,90,.1);border:1px solid rgba(239,74,90,.3);color:var(--alert);cursor:pointer;font-size:13px;}
+.item-num{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.1em;margin-bottom:10px;display:block;}
+.btn{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:12px 22px;border-radius:10px;border:1px solid var(--line3);background:transparent;color:var(--paper);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px;}
+.btn:hover{border-color:var(--electric);color:var(--electric);}
+.btn-add{border-style:dashed;width:100%;justify-content:center;margin-top:4px;}
+.btn-save{background:linear-gradient(120deg,var(--blue),#2646d4);border-color:var(--blue);color:#fff;margin-top:22px;}
+.btn-save:hover{box-shadow:0 10px 30px -12px rgba(28,57,187,.6);color:#fff;}
+.btn:active{transform:scale(.97);}
+.save-status{margin-left:14px;font-family:var(--mono);font-size:11px;color:var(--good);opacity:0;transition:opacity .3s;}
+.save-status.show{opacity:1;}
+.hint{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:4px;line-height:1.6;}
+.rules-list-input textarea{min-height:90px;}
+.mobile-tabs{display:none;}
+@media (max-width:900px){
+  .admin-shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:sticky;top:0;flex-direction:row;overflow-x:auto;padding:12px;z-index:5;background:var(--ink);}
+  .sb-brand,.sb-user{display:none;}
+  .sb-nav{flex-direction:row;flex:none;}
+  .sb-btn{white-space:nowrap;}
+  .admin-main{padding:24px 16px;}
+  .field-row,.field-row.three{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH GATE ============ -->
+<div id="authGate">
+  <div class="auth-card glass">
+    <div class="auth-logo"><span class="auth-cell">Cr</span><span class="auth-cell">Es</span><span class="auth-cell">Co</span></div>
+    <h1>Mission Control</h1>
+    <p>Sign in with your authorised Google account to manage Cresco Scientiam 5.0's live content.</p>
+    <button class="google-btn" id="googleSignIn">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.8 32.3 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.6 6.5 29 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.4-.4-3.5Z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.6 6.5 29 4.5 24 4.5c-7.6 0-14.2 4.3-17.7 10.2Z"/><path fill="#4CAF50" d="M24 43.5c4.9 0 9.4-1.9 12.7-4.9l-6-5.1C28.9 35 26.6 35.8 24 35.8c-5.3 0-9.8-3.4-11.4-8.1l-6.5 5C9 39 16 43.5 24 43.5Z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.7 2.1-2.1 4-3.9 5.4l6 5.1C40.5 35.6 43.5 30.2 43.5 24c0-1.2-.1-2.4-.4-3.5Z"/></svg>
+      Sign in with Google
+    </button>
+    <p class="auth-note">Access is restricted to email addresses on the admin allow-list.</p>
+  </div>
+</div>
+
+<!-- ============ ACCESS DENIED ============ -->
+<div id="deniedGate" style="display:none;">
+  <div class="auth-card glass">
+    <div class="denied-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg></div>
+    <h1>Access Denied</h1>
+    <p id="deniedEmail" style="margin-top:6px;font-family:var(--mono);font-size:12px;"></p>
+    <p style="margin-top:14px;">This Google account isn't on the admin allow-list. Ask an existing admin to add your email to the <code>admins</code> collection in Firestore.</p>
+    <span class="signout-link" id="deniedSignout">Sign out &amp; try another account</span>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard">
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><span class="auth-cell" style="width:30px;height:22px;">Cs</span><div><b>Mission Control</b><span>CRESCO SCIENTIAM 5.0</span></div></div>
+      <nav class="sb-nav" id="sbNav">
+        <button class="sb-btn active" data-panel="p-ticker">Ticker &amp; Marquee</button>
+        <button class="sb-btn" data-panel="p-stats">Hero Stats</button>
+        <button class="sb-btn" data-panel="p-announce">Announcements</button>
+        <button class="sb-btn" data-panel="p-events">Events (12)</button>
+        <button class="sb-btn" data-panel="p-editions">Editions</button>
+        <button class="sb-btn" data-panel="p-team">Core Committee</button>
+        <button class="sb-btn" data-panel="p-teachers">Teachers In-Charge</button>
+        <button class="sb-btn" data-panel="p-heads">Event Heads</button>
+        <button class="sb-btn" data-panel="p-sponsors">Sponsors</button>
+        <button class="sb-btn" data-panel="p-schools">Schools (Portal)</button>
+        <button class="sb-btn" data-panel="p-assets">Site Assets</button>
+      </nav>
+      <div class="sb-user">
+        <img id="sbUserPhoto" src="" alt="">
+        <div class="sb-user-info"><b id="sbUserName"></b><span id="sbUserEmail"></span></div>
+        <button class="sb-signout" id="sbSignOut">&#8594;]</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <!-- TICKER & MARQUEE -->
+      <div class="admin-panel active" id="p-ticker">
+        <div class="admin-header"><h2>Ticker &amp; Marquee</h2><p>The scrolling strip at the very top of every page, and the "Create · Establish · Compete" banner beneath the hero.</p></div>
+        <label style="margin-top:10px;">Top Ticker Items</label>
+        <div id="tickerItems"></div>
+        <button class="btn btn-add" id="addTicker">+ Add ticker item</button>
+        <label style="margin-top:24px;">Marquee Phrases</label>
+        <div id="marqueeItems"></div>
+        <button class="btn btn-add" id="addMarquee">+ Add marquee phrase</button>
+        <div><button class="btn btn-save" id="saveTicker">Save Ticker &amp; Marquee</button><span class="save-status" id="statusTicker">Saved ✓</span></div>
+      </div>
+
+      <!-- HERO STATS -->
+      <div class="admin-panel" id="p-stats">
+        <div class="admin-header"><h2>Hero Stats Strip</h2><p>The Edition / Events / Worlds / Duration / Dates row under the homepage headline.</p></div>
+        <div id="statsItems"></div>
+        <button class="btn btn-add" id="addStat">+ Add stat</button>
+        <div><button class="btn btn-save" id="saveStats">Save Hero Stats</button><span class="save-status" id="statusStats">Saved ✓</span></div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="admin-panel" id="p-announce">
+        <div class="admin-header"><h2>Announcements</h2><p>Shown on the homepage and to logged-in schools on the School Portal. Each can have multiple paragraphs — leave a blank line between paragraphs.</p></div>
+        <div id="announceItems"></div>
+        <button class="btn btn-add" id="addAnnounce">+ Add announcement</button>
+        <div><button class="btn btn-save" id="saveAnnounce">Save Announcements</button><span class="save-status" id="statusAnnounce">Saved ✓</span></div>
+      </div>
+
+      <!-- EVENTS -->
+      <div class="admin-panel" id="p-events">
+        <div class="admin-header"><h2>Events</h2><p>Logo (circular badge) and box image (card background) — type the exact filename as uploaded to the site root, no folder.</p></div>
+        <div id="eventItems"></div>
+        <div><button class="btn btn-save" id="saveEvents">Save All Events</button><span class="save-status" id="statusEvents">Saved ✓</span></div>
+      </div>
+
+      <!-- EDITIONS -->
+      <div class="admin-panel" id="p-editions">
+        <div class="admin-header"><h2>Past Editions</h2><p>The "Flight Recorder" gallery on the homepage. Add as many editions as you like — the current year gets a special highlighted card automatically when you tick "This is the current edition".</p></div>
+        <div id="editionItems"></div>
+        <button class="btn btn-add" id="addEdition">+ Add edition</button>
+        <div><button class="btn btn-save" id="saveEditions">Save Editions</button><span class="save-status" id="statusEditions">Saved ✓</span></div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="admin-panel" id="p-team">
+        <div class="admin-header"><h2>Core Committee &amp; IT</h2><p>Photos should be transparent-background, chest-up, and reasonably large. Type the filename as uploaded to the site root.</p></div>
+        <div id="teamItems"></div>
+        <button class="btn btn-add" id="addTeam">+ Add member</button>
+        <div><button class="btn btn-save" id="saveTeam">Save Team</button><span class="save-status" id="statusTeam">Saved ✓</span></div>
+      </div>
+
+      <!-- TEACHERS -->
+      <div class="admin-panel" id="p-teachers">
+        <div class="admin-header"><h2>Teachers In-Charge</h2><p>Shown on the Team page and referenced sitewide as fest contacts.</p></div>
+        <div id="teacherItems"></div>
+        <button class="btn btn-add" id="addTeacher">+ Add teacher</button>
+        <div><button class="btn btn-save" id="saveTeachers">Save Teachers</button><span class="save-status" id="statusTeachers">Saved ✓</span></div>
+      </div>
+
+      <!-- EVENT HEADS -->
+      <div class="admin-panel" id="p-heads">
+        <div class="admin-header"><h2>Event Heads</h2><p>One row per event. The "slug" links this row to an event above for the on-site event modal — use the exact event slug (e.g. <code>kurukshetra</code>).</p></div>
+        <div id="headsItems"></div>
+        <button class="btn btn-add" id="addHead">+ Add row</button>
+        <div><button class="btn btn-save" id="saveHeads">Save Event Heads</button><span class="save-status" id="statusHeads">Saved ✓</span></div>
+      </div>
+
+      <!-- SPONSORS -->
+      <div class="admin-panel" id="p-sponsors">
+        <div class="admin-header"><h2>Sponsors</h2><p>Platinum, Gold, Silver, Associate and Media tiers. Logo = exact filename in the site root.</p></div>
+        <div id="sponsorTiers"></div>
+        <div><button class="btn btn-save" id="saveSponsors">Save Sponsors</button><span class="save-status" id="statusSponsors">Saved ✓</span></div>
+      </div>
+
+      <!-- SCHOOLS -->
+      <div class="admin-panel" id="p-schools">
+        <div class="admin-header"><h2>School Portal Accounts</h2><p>Each school gets an email + password (emailed to them separately). Once added here, they can log in on the School Portal to view announcements. Passwords are hashed before saving — not stored in plain text.</p></div>
+        <div id="schoolItems"></div>
+        <button class="btn btn-add" id="addSchool">+ Add school</button>
+        <div><button class="btn btn-save" id="saveSchools">Save Schools</button><span class="save-status" id="statusSchools">Saved ✓</span></div>
+        <p class="hint" style="margin-top:16px;">Security note: this is a lightweight Firestore-based login suitable for viewing low-sensitivity announcements. It is not equivalent to full Firebase Authentication. Do not reuse these passwords for anything sensitive.</p>
+      </div>
+
+      <!-- ASSETS -->
+      <div class="admin-panel" id="p-assets">
+        <div class="admin-header"><h2>Site-Wide Assets</h2><p>Fixed-name images used across the site. Upload the file to the root with this exact name.</p></div>
+        <div class="field-row single"><div><label>Hero Backdrop (index.html) — hero-backdrop.jpg</label><input type="text" id="assetHero" placeholder="hero-backdrop.jpg"></div></div>
+        <div class="field-row single"><div><label>School Registration PDF Form — school-registration-form.pdf</label><input type="text" id="assetRegPdf" placeholder="school-registration-form.pdf"></div></div>
+        <div class="field-row single"><div><label>DPS School Crest (about.html) — dps-logo.png</label><input type="text" id="assetDpsLogo" placeholder="dps-logo.png"></div></div>
+        <div><button class="btn btn-save" id="saveAssets">Save Assets</button><span class="save-status" id="statusAssets">Saved ✓</span></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCr7RU1pUOyxV88VEAgJZwEHNupTHCnv98",
+  authDomain: "cresco-scientiam.firebaseapp.com",
+  projectId: "cresco-scientiam",
+  storageBucket: "cresco-scientiam.firebasestorage.app",
+  messagingSenderId: "102065794685",
+  appId: "1:102065794685:web:bf1bb3506d77a722368b14",
+  measurementId: "G-QLQSFRB8ZW"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const authGate = document.getElementById('authGate');
+const deniedGate = document.getElementById('deniedGate');
+const dashboard = document.getElementById('dashboard');
+
+document.getElementById('googleSignIn').addEventListener('click', () => {
+  signInWithPopup(auth, provider).catch(err => alert("Sign-in failed: " + err.message));
+});
+document.getElementById('deniedSignout').addEventListener('click', () => signOut(auth));
+document.getElementById('sbSignOut').addEventListener('click', () => signOut(auth));
+
+let CONTENT = {};
+const CONTENT_REF = doc(db, "siteContent", "main");
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    authGate.style.display = 'flex'; deniedGate.style.display = 'none'; dashboard.style.display = 'none';
+    return;
+  }
+  // Check admin allow-list: a document must exist at admins/{email}
+  try {
+    const adminSnap = await getDoc(doc(db, "admins", user.email));
+    if (!adminSnap.exists()) {
+      authGate.style.display = 'none';
+      deniedGate.style.display = 'flex';
+      document.getElementById('deniedEmail').textContent = user.email;
+      return;
+    }
+  } catch (err) {
+    // If the admins check itself fails (e.g. rules deny read), treat as denied.
+    authGate.style.display = 'none';
+    deniedGate.style.display = 'flex';
+    document.getElementById('deniedEmail').textContent = user.email + " — could not verify access.";
+    return;
+  }
+  authGate.style.display = 'none'; deniedGate.style.display = 'none'; dashboard.style.display = 'block';
+  document.getElementById('sbUserPhoto').src = user.photoURL || '';
+  document.getElementById('sbUserName').textContent = user.displayName || user.email;
+  document.getElementById('sbUserEmail').textContent = user.email;
+
+  const snap = await getDoc(CONTENT_REF);
+  CONTENT = snap.exists() ? snap.data() : {};
+  hydrateAll();
+});
+
+/* ================= SIDEBAR TAB SWITCHING ================= */
+document.querySelectorAll('.sb-btn[data-panel]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.panel).classList.add('active');
+  });
+});
+
+/* ================= HELPERS ================= */
+function flashStatus(id){
+  const el = document.getElementById(id);
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+async function saveField(key, value, statusId){
+  await setDoc(CONTENT_REF, { [key]: value }, { merge: true });
+  CONTENT[key] = value;
+  flashStatus(statusId);
+}
+async function sha256(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ================= TICKER & MARQUEE ================= */
+function hydrateTicker(){
+  const ticker = CONTENT.ticker || ["DPS MEGACITY PRESENTS","CRESCO SCIENTIAM 5.0","25–26 SEPTEMBER 2026","THREE THEME-WORLDS · TWELVE EVENTS","BEYOND THE HORIZON"];
+  const marquee = CONTENT.marquee || ["Create.","Establish.","Compete.","Beyond the Horizon"];
+  const tWrap = document.getElementById('tickerItems'); tWrap.innerHTML='';
+  ticker.forEach(v => addSimpleRow(tWrap, v));
+  const mWrap = document.getElementById('marqueeItems'); mWrap.innerHTML='';
+  marquee.forEach(v => addSimpleRow(mWrap, v));
+}
+function addSimpleRow(wrap, value=''){
+  const row = document.createElement('div');
+  row.className = 'field-row single';
+  row.style.display='flex'; row.style.gap='8px'; row.style.alignItems='center';
+  row.innerHTML = `<input type="text" value="${(value||'').replace(/"/g,'&quot;')}" style="flex:1;"><button class="btn item-remove-inline" style="padding:8px 12px;">✕</button>`;
+  row.querySelector('.item-remove-inline').addEventListener('click', () => row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addTicker').addEventListener('click', () => addSimpleRow(document.getElementById('tickerItems')));
+document.getElementById('addMarquee').addEventListener('click', () => addSimpleRow(document.getElementById('marqueeItems')));
+document.getElementById('saveTicker').addEventListener('click', async () => {
+  const ticker = [...document.getElementById('tickerItems').querySelectorAll('input')].map(i=>i.value).filter(Boolean);
+  const marquee = [...document.getElementById('marqueeItems').querySelectorAll('input')].map(i=>i.value).filter(Boolean);
+  await setDoc(CONTENT_REF, { ticker, marquee }, { merge:true });
+  flashStatus('statusTicker');
+});
+
+/* ================= HERO STATS ================= */
+function hydrateStats(){
+  const stats = CONTENT.heroStats || [{label:"Edition",value:"05.0"},{label:"Events",value:"12"},{label:"Worlds",value:"03"},{label:"Duration",value:"2 Days"},{label:"Dates",value:"25–26 Sept"}];
+  const wrap = document.getElementById('statsItems'); wrap.innerHTML='';
+  stats.forEach(s => addStatRow(wrap, s));
+}
+function addStatRow(wrap, s={label:'',value:''}){
+  const row = document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button><div class="field-row"><div><label>Label</label><input type="text" class="f-label" value="${s.label||''}"></div><div><label>Value</label><input type="text" class="f-value" value="${s.value||''}"></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click', ()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addStat').addEventListener('click', ()=>addStatRow(document.getElementById('statsItems')));
+document.getElementById('saveStats').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('statsItems').querySelectorAll('.item-card')];
+  const heroStats = rows.map(r=>({label:r.querySelector('.f-label').value, value:r.querySelector('.f-value').value})).filter(s=>s.label||s.value);
+  await saveField('heroStats', heroStats, 'statusStats');
+});
+
+/* ================= ANNOUNCEMENTS ================= */
+function hydrateAnnounce(){
+  const list = CONTENT.announcements || [];
+  const wrap = document.getElementById('announceItems'); wrap.innerHTML='';
+  list.forEach(a=>addAnnounceRow(wrap,a));
+}
+function addAnnounceRow(wrap, a={title:'',body:''}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button><div class="field-row single"><div><label>Title</label><input type="text" class="f-title" value="${a.title||''}"></div></div><div class="field-row single"><div><label>Body (blank line = new paragraph)</label><textarea class="f-body" rows="4">${a.body||''}</textarea></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addAnnounce').addEventListener('click', ()=>addAnnounceRow(document.getElementById('announceItems')));
+document.getElementById('saveAnnounce').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('announceItems').querySelectorAll('.item-card')];
+  const announcements=rows.map(r=>({title:r.querySelector('.f-title').value, body:r.querySelector('.f-body').value})).filter(a=>a.title||a.body);
+  await saveField('announcements', announcements, 'statusAnnounce');
+});
+
+/* ================= EVENTS (fixed 12, edit-only) ================= */
+const DEFAULT_EVENTS = [
+  {id:"e1",world:"myth",num:"01",slug:"kurukshetra",title:"Kurukshetra",sub:"Chess",icon:"chess",team:"1 (Individual)",dur:"2 hours",venue:"Classroom 12A",logo:"",box:"",desc:"A classical over-the-board chess tournament run on a Swiss-league format across multiple rounds, with tie-breaks decided by Buchholz score.",rules:["Individual event, one participant per school per category.","Standard FIDE rules apply throughout.","Each round is time-controlled — 15 minutes per player.","Electronic devices at the board are strictly prohibited.","Decisions of the arbiter are final and binding."]},
+  {id:"e2",world:"myth",num:"02",slug:"chitrakatha",title:"Chitrakatha",sub:"Pictionary",icon:"brush",team:"2 members",dur:"1.5 hours",venue:"Hall 2",logo:"",box:"",desc:"A mythology-themed Pictionary relay.",rules:["Teams of exactly two students.","No verbal clues, gestures, letters, or numbers while sketching."]},
+  {id:"e3",world:"myth",num:"03",slug:"dharmasangram",title:"Dharmasangram",sub:"Debate",icon:"scales",team:"2 members",dur:"3 hours",venue:"Library",logo:"",box:"",desc:"A structured debate on motions rooted in ethics, mythology and modern dilemmas.",rules:["Teams of two; roles assigned on the day.","7 minutes per speaker."]},
+  {id:"e4",world:"myth",num:"04",slug:"swaranjali",title:"Swaranjali",sub:"Music",icon:"music",team:"Up to 4 members",dur:"3 hours",venue:"Hall 2",logo:"",box:"",desc:"A solo or group musical performance event.",rules:["Solo or group (max 4 members).","Performance time limit: 5 minutes."]},
+  {id:"e5",world:"cosmos",num:"05",slug:"chromatica",title:"Chromatica",sub:"Chemical Art",icon:"flask",team:"2 members",dur:"2.5 hours",venue:"Classroom 12A",logo:"",box:"",desc:"Teams use chemical reactions to build visual art on canvas.",rules:["Teams of two.","Safety goggles mandatory."]},
+  {id:"e6",world:"cosmos",num:"06",slug:"corpus-vestigium",title:"Corpus Vestigium",sub:"Forensics",icon:"magnifier",team:"2 members",dur:"2.5 hours",venue:"Biology Lab",logo:"",box:"",desc:"A forensic-science simulation of a staged crime scene.",rules:["Teams of two.","Evidence kits provided."]},
+  {id:"e7",world:"cosmos",num:"07",slug:"pi-infinitum",title:"π Infinitum",sub:"Mathlympics",icon:"pi",team:"1 (Individual)",dur:"2 hours",venue:"Room 12B",logo:"",box:"",desc:"An IOQM-style mathematics olympiad.",rules:["Individual event.","No calculators."]},
+  {id:"e8",world:"cosmos",num:"08",slug:"astra-cognitio",title:"Astra Cognitio",sub:"Quiz",icon:"quiz",team:"2 members",dur:"2.5 hours",venue:"Auditorium",logo:"",box:"",desc:"A fast-paced, multi-round STEM quiz.",rules:["Teams of two.","Written prelims + stage final."]},
+  {id:"e9",world:"eco",num:"09",slug:"clamor-naturae",title:"Clamor Naturae",sub:"Drama",icon:"masks",team:"Up to 10 members",dur:"3.5 hours",venue:"Ground Floor Auditorium",logo:"",box:"",desc:"A themed stage-drama competition on environmental issues.",rules:["Up to 10 members.","8-minute limit."]},
+  {id:"e10",world:"eco",num:"10",slug:"viridis-vox",title:"Viridis Vox",sub:"News Reading",icon:"mic",team:"1 (Individual)",dur:"2 hours",venue:"TBD",logo:"",box:"",desc:"A mock-broadcast news reading competition.",rules:["Individual event.","Script given 30 mins prior."]},
+  {id:"e11",world:"eco",num:"11",slug:"genesis-nova",title:"Genesis Nova",sub:"Genetic Engineering",icon:"dna",team:"2 members",dur:"2.5 hours",venue:"Biotech Lab",logo:"",box:"",desc:"A theory-and-model genetic engineering event.",rules:["Teams of two.","Model + 15-min presentation."]},
+  {id:"e12",world:"eco",num:"12",slug:"ventus-lapidum",title:"Ventus Lapidum",sub:"Architecture",icon:"building",team:"2 members",dur:"3 hours",venue:"Physics Lab",logo:"",box:"",desc:"A sustainable-architecture design challenge.",rules:["Teams of two.","Materials supplied on-site."]}
+];
+function hydrateEvents(){
+  const events = (CONTENT.events && CONTENT.events.length) ? CONTENT.events : DEFAULT_EVENTS;
+  const wrap = document.getElementById('eventItems'); wrap.innerHTML='';
+  events.forEach(ev=>{
+    const row=document.createElement('div');
+    row.className='item-card'; row.dataset.id=ev.id; row.dataset.slug=ev.slug; row.dataset.world=ev.world; row.dataset.num=ev.num; row.dataset.icon=ev.icon;
+    row.innerHTML=`<span class="item-num">${ev.num} · ${ev.world.toUpperCase()} · slug: ${ev.slug}</span>
+      <div class="field-row three">
+        <div><label>Title</label><input type="text" class="f-title" value="${ev.title}"></div>
+        <div><label>Subtitle</label><input type="text" class="f-sub" value="${ev.sub}"></div>
+        <div><label>Team Size</label><input type="text" class="f-team" value="${ev.team}"></div>
+      </div>
+      <div class="field-row three">
+        <div><label>Duration</label><input type="text" class="f-dur" value="${ev.dur}"></div>
+        <div><label>Venue</label><input type="text" class="f-venue" value="${ev.venue}"></div>
+        <div><label>&nbsp;</label></div>
+      </div>
+      <div class="field-row">
+        <div><label>Logo filename (circular)</label><input type="text" class="f-logo" value="${ev.logo||''}" placeholder="${ev.slug}.png"></div>
+        <div><label>Box image filename (card backdrop)</label><input type="text" class="f-box" value="${ev.box||''}" placeholder="${ev.slug}-box.jpg"></div>
+      </div>
+      <div class="field-row single"><div><label>Description</label><textarea class="f-desc" rows="3">${ev.desc}</textarea></div></div>
+      <div class="field-row single rules-list-input"><div><label>Rules (one per line)</label><textarea class="f-rules" rows="4">${(ev.rules||[]).join('\n')}</textarea></div></div>`;
+    wrap.appendChild(row);
+  });
+}
+document.getElementById('saveEvents').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('eventItems').querySelectorAll('.item-card')];
+  const events = rows.map(r=>({
+    id:r.dataset.id, slug:r.dataset.slug, world:r.dataset.world, num:r.dataset.num, icon:r.dataset.icon,
+    title:r.querySelector('.f-title').value, sub:r.querySelector('.f-sub').value, team:r.querySelector('.f-team').value,
+    dur:r.querySelector('.f-dur').value, venue:r.querySelector('.f-venue').value,
+    logo:r.querySelector('.f-logo').value, box:r.querySelector('.f-box').value,
+    desc:r.querySelector('.f-desc').value, rules:r.querySelector('.f-rules').value.split('\n').map(s=>s.trim()).filter(Boolean)
+  }));
+  await saveField('events', events, 'statusEvents');
+});
+
+/* ================= EDITIONS ================= */
+function hydrateEditions(){
+  const list = CONTENT.editions || [
+    {year:"2022",edition:"1.0",title:"First Ignition",desc:"A single-day meet, four events, and the very first Cresco trophy.",image:"",current:false},
+    {year:"2023",edition:"2.0",title:"Widening Orbit",desc:"Eight events and six participating schools joined the roster.",image:"",current:false},
+    {year:"2024",edition:"3.0",title:"Critical Mass",desc:"Cresco crossed 300 participants for the first time.",image:"",current:false},
+    {year:"2025",edition:"4.0",title:"Escape Velocity",desc:"Twelve events, three theme-worlds.",image:"",current:false},
+    {year:"2026",edition:"5.0",title:"Beyond The Horizon",desc:"This edition — happening right now.",image:"",current:true}
+  ];
+  const wrap=document.getElementById('editionItems'); wrap.innerHTML='';
+  list.forEach(ed=>addEditionRow(wrap,ed));
+}
+function addEditionRow(wrap, ed={year:'',edition:'',title:'',desc:'',image:'',current:false}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>Year</label><input type="text" class="f-year" value="${ed.year||''}"></div>
+      <div><label>Edition #</label><input type="text" class="f-edition" value="${ed.edition||''}"></div>
+      <div><label>Title</label><input type="text" class="f-title" value="${ed.title||''}"></div>
+    </div>
+    <div class="field-row">
+      <div><label>Description</label><input type="text" class="f-desc" value="${ed.desc||''}"></div>
+      <div><label>Image filename</label><input type="text" class="f-image" value="${ed.image||''}"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:6px;"><input type="checkbox" class="f-current" ${ed.current?'checked':''} style="width:auto;">This is the current edition (gets the highlighted card)</label>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addEdition').addEventListener('click', ()=>addEditionRow(document.getElementById('editionItems')));
+document.getElementById('saveEditions').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('editionItems').querySelectorAll('.item-card')];
+  const editions=rows.map(r=>({
+    year:r.querySelector('.f-year').value, edition:r.querySelector('.f-edition').value, title:r.querySelector('.f-title').value,
+    desc:r.querySelector('.f-desc').value, image:r.querySelector('.f-image').value, current:r.querySelector('.f-current').checked
+  })).filter(e=>e.year||e.title);
+  await saveField('editions', editions, 'statusEditions');
+});
+
+/* ================= TEAM (core committee + IT) ================= */
+function hydrateTeam(){
+  const list = CONTENT.team || [
+    {name:"Shreyash Saha",role:"Core Committee",image:""},{name:"Yashika Aggarwalla",role:"Core Committee",image:""},
+    {name:"Sanjita Kundu",role:"Core Committee",image:""},{name:"Anushka Dey",role:"Core Committee",image:""},
+    {name:"Animita Mukherjee",role:"Core Committee",image:""},{name:"Priyanshu Sarkar",role:"Core Committee",image:""},
+    {name:"Aarav Sinha",role:"IT Head",image:"",itHead:true,whatsapp:"917718978934"}
+  ];
+  const wrap=document.getElementById('teamItems'); wrap.innerHTML='';
+  list.forEach(m=>addTeamRow(wrap,m));
+}
+function addTeamRow(wrap, m={name:'',role:'',image:'',itHead:false,whatsapp:''}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>Name</label><input type="text" class="f-name" value="${m.name||''}"></div>
+      <div><label>Role</label><input type="text" class="f-role" value="${m.role||''}"></div>
+      <div><label>Photo filename (transparent bg, chest-up)</label><input type="text" class="f-image" value="${m.image||''}"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:6px;"><input type="checkbox" class="f-ithead" ${m.itHead?'checked':''} style="width:auto;">This is the IT Head (shows a WhatsApp button)</label>
+    <div class="field-row single" style="margin-top:8px;"><div><label>WhatsApp number (IT Head only, with country code, no +)</label><input type="text" class="f-whatsapp" value="${m.whatsapp||''}" placeholder="917718978934"></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addTeam').addEventListener('click', ()=>addTeamRow(document.getElementById('teamItems')));
+document.getElementById('saveTeam').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('teamItems').querySelectorAll('.item-card')];
+  const team=rows.map(r=>({
+    name:r.querySelector('.f-name').value, role:r.querySelector('.f-role').value, image:r.querySelector('.f-image').value,
+    itHead:r.querySelector('.f-ithead').checked, whatsapp:r.querySelector('.f-whatsapp').value
+  })).filter(m=>m.name);
+  await saveField('team', team, 'statusTeam');
+});
+
+/* ================= TEACHERS ================= */
+function hydrateTeachers(){
+  const list = CONTENT.teachers || [
+    {name:"Sanchita Ma'am",role:"Teacher In-Charge",phone:"+91 98363 11179",image:""},
+    {name:"Rajarshi Sir",role:"Teacher In-Charge",phone:"+91 98308 18901",image:""}
+  ];
+  const wrap=document.getElementById('teacherItems'); wrap.innerHTML='';
+  list.forEach(t=>addTeacherRow(wrap,t));
+}
+function addTeacherRow(wrap, t={name:'',role:'Teacher In-Charge',phone:'',image:''}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>Name</label><input type="text" class="f-name" value="${t.name||''}"></div>
+      <div><label>Role</label><input type="text" class="f-role" value="${t.role||'Teacher In-Charge'}"></div>
+      <div><label>Phone</label><input type="text" class="f-phone" value="${t.phone||''}"></div>
+    </div>
+    <div class="field-row single"><div><label>Photo filename</label><input type="text" class="f-image" value="${t.image||''}"></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addTeacher').addEventListener('click', ()=>addTeacherRow(document.getElementById('teacherItems')));
+document.getElementById('saveTeachers').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('teacherItems').querySelectorAll('.item-card')];
+  const teachers=rows.map(r=>({name:r.querySelector('.f-name').value, role:r.querySelector('.f-role').value, phone:r.querySelector('.f-phone').value, image:r.querySelector('.f-image').value})).filter(t=>t.name);
+  await saveField('teachers', teachers, 'statusTeachers');
+});
+
+/* ================= EVENT HEADS ================= */
+function hydrateHeads(){
+  const list = CONTENT.eventHeadsFull || [
+    {event:"Biotech",slug:"genesis-nova",names:"Maisha Jalota, Meher Bhurji",cls:"11"},
+    {event:"Forensics",slug:"corpus-vestigium",names:"Aashna Goyal, Vanshika Paul",cls:"11"},
+    {event:"Engineering",slug:"ventus-lapidum",names:"Aryan Sircar, Atri Pradhan",cls:"11"},
+    {event:"Chromatica",slug:"chromatica",names:"Shaurya Kishore, Alankrita Upadhyay",cls:"11"},
+    {event:"Pictionary",slug:"chitrakatha",names:"Yuvraj Chowdhary, Sushmita Jha",cls:"11"},
+    {event:"Quiz",slug:"astra-cognitio",names:"Uddalak Nandan",cls:"11"},
+    {event:"Debate",slug:"dharmasangram",names:"Prisha Arora, Shreenika Kundu",cls:"11"},
+    {event:"Music",slug:"swaranjali",names:"Spriha Das, Arya Banerjee",cls:"11"},
+    {event:"Mathelympics",slug:"pi-infinitum",names:"Anshuman Sikaria, Anaya Afaaf",cls:"11"},
+    {event:"Chess",slug:"kurukshetra",names:"Attri Roy, Souhardha Kar",cls:"11"},
+    {event:"News Reading",slug:"viridis-vox",names:"Vidhi Bhalotia, Sneha Panda",cls:"11"},
+    {event:"Drama",slug:"clamor-naturae",names:"Riddhima Bhowmik",cls:"11"}
+  ];
+  const wrap=document.getElementById('headsItems'); wrap.innerHTML='';
+  list.forEach(h=>addHeadRow(wrap,h));
+}
+function addHeadRow(wrap, h={event:'',slug:'',names:'',cls:'11'}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  const namesStr = Array.isArray(h.names) ? h.names.join(', ') : (h.names||'');
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>Event Name (as on sheet)</label><input type="text" class="f-event" value="${h.event||''}"></div>
+      <div><label>Linked slug</label><input type="text" class="f-slug" value="${h.slug||''}"></div>
+      <div><label>Class</label><input type="text" class="f-cls" value="${h.cls||'11'}"></div>
+    </div>
+    <div class="field-row single"><div><label>Names (comma separated)</label><input type="text" class="f-names" value="${namesStr}"></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addHead').addEventListener('click', ()=>addHeadRow(document.getElementById('headsItems')));
+document.getElementById('saveHeads').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('headsItems').querySelectorAll('.item-card')];
+  const eventHeadsFull=rows.map(r=>({event:r.querySelector('.f-event').value, slug:r.querySelector('.f-slug').value, cls:r.querySelector('.f-cls').value, names:r.querySelector('.f-names').value.split(',').map(s=>s.trim()).filter(Boolean)})).filter(h=>h.event);
+  await setDoc(CONTENT_REF, { eventHeadsFull, eventHeads: eventHeadsFull }, { merge:true });
+  flashStatus('statusHeads');
+});
+
+/* ================= SPONSORS ================= */
+const SPONSOR_TIERS=[["platinum","Platinum"],["gold","Gold"],["silver","Silver"],["associate","Associate"],["media","Media Partners"]];
+function hydrateSponsors(){
+  const data = CONTENT.sponsors || {};
+  const wrap=document.getElementById('sponsorTiers'); wrap.innerHTML='';
+  SPONSOR_TIERS.forEach(([key,label])=>{
+    const section=document.createElement('div');
+    section.style.marginBottom='26px';
+    section.innerHTML=`<label style="font-size:11px;color:var(--electric);">${label}</label><div class="tier-list" data-tier="${key}"></div><button class="btn btn-add" data-tier-add="${key}">+ Add ${label} sponsor</button>`;
+    wrap.appendChild(section);
+    const list=section.querySelector('.tier-list');
+    (data[key]||[]).forEach(s=>addSponsorRow(list,s));
+    section.querySelector(`[data-tier-add="${key}"]`).addEventListener('click', ()=>addSponsorRow(list));
+  });
+}
+function addSponsorRow(wrap, s={name:'',tagline:'',link:'',logo:''}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>Name</label><input type="text" class="f-name" value="${s.name||''}"></div>
+      <div><label>Website Link</label><input type="text" class="f-link" value="${s.link||''}"></div>
+      <div><label>Logo filename</label><input type="text" class="f-logo" value="${s.logo||''}"></div>
+    </div>
+    <div class="field-row single"><div><label>Tagline (optional)</label><input type="text" class="f-tagline" value="${s.tagline||''}"></div></div>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('saveSponsors').addEventListener('click', async ()=>{
+  const sponsors={};
+  SPONSOR_TIERS.forEach(([key])=>{
+    const list=document.querySelector(`.tier-list[data-tier="${key}"]`);
+    sponsors[key]=[...list.querySelectorAll('.item-card')].map(r=>({
+      name:r.querySelector('.f-name').value, link:r.querySelector('.f-link').value, logo:r.querySelector('.f-logo').value, tagline:r.querySelector('.f-tagline').value
+    })).filter(s=>s.name);
+  });
+  await saveField('sponsors', sponsors, 'statusSponsors');
+});
+
+/* ================= SCHOOLS (Portal accounts) ================= */
+function hydrateSchools(){
+  const list = CONTENT.schools || [];
+  const wrap=document.getElementById('schoolItems'); wrap.innerHTML='';
+  list.forEach(s=>addSchoolRow(wrap,s));
+}
+function addSchoolRow(wrap, s={schoolName:'',email:'',passwordHash:'',active:true}){
+  const row=document.createElement('div');
+  row.className='item-card';
+  row.dataset.existingHash=s.passwordHash||'';
+  row.innerHTML=`<button class="item-remove">✕</button>
+    <div class="field-row three">
+      <div><label>School Name</label><input type="text" class="f-school" value="${s.schoolName||''}"></div>
+      <div><label>Login Email</label><input type="email" class="f-email" value="${s.email||''}"></div>
+      <div><label>New Password (leave blank to keep existing)</label><input type="text" class="f-pass" value="" placeholder="${s.passwordHash?'●●●●●●●● (set)':'Set a password'}"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:6px;"><input type="checkbox" class="f-active" ${s.active!==false?'checked':''} style="width:auto;">Account active</label>`;
+  row.querySelector('.item-remove').addEventListener('click',()=>row.remove());
+  wrap.appendChild(row);
+}
+document.getElementById('addSchool').addEventListener('click', ()=>addSchoolRow(document.getElementById('schoolItems')));
+document.getElementById('saveSchools').addEventListener('click', async ()=>{
+  const rows=[...document.getElementById('schoolItems').querySelectorAll('.item-card')];
+  const schools=[];
+  for(const r of rows){
+    const email=r.querySelector('.f-email').value.trim().toLowerCase();
+    if(!email) continue;
+    const newPass=r.querySelector('.f-pass').value;
+    const passwordHash = newPass ? await sha256(newPass) : r.dataset.existingHash;
+    schools.push({
+      schoolName:r.querySelector('.f-school').value, email, passwordHash,
+      active:r.querySelector('.f-active').checked
+    });
+  }
+  await saveField('schools', schools, 'statusSchools');
+  hydrateSchools();
+});
+
+/* ================= ASSETS ================= */
+function hydrateAssets(){
+  document.getElementById('assetHero').value = CONTENT.heroBackdrop || 'hero-backdrop.jpg';
+  document.getElementById('assetRegPdf').value = CONTENT.registrationPdf || 'school-registration-form.pdf';
+  document.getElementById('assetDpsLogo').value = CONTENT.dpsLogo || 'dps-logo.png';
+}
+document.getElementById('saveAssets').addEventListener('click', async ()=>{
+  await setDoc(CONTENT_REF, {
+    heroBackdrop: document.getElementById('assetHero').value,
+    registrationPdf: document.getElementById('assetRegPdf').value,
+    dpsLogo: document.getElementById('assetDpsLogo').value
+  }, { merge:true });
+  flashStatus('statusAssets');
+});
+
+function hydrateAll(){
+  hydrateTicker(); hydrateStats(); hydrateAnnounce(); hydrateEvents(); hydrateEditions();
+  hydrateTeam(); hydrateTeachers(); hydrateHeads(); hydrateSponsors(); hydrateSchools(); hydrateAssets();
+}
+</script>
+</body>
+</html>
