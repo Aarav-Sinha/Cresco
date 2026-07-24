@@ -266,6 +266,93 @@ section{position:relative;z-index:2;padding:20px 0;}
   border-right:1px solid var(--line2);
 }
 
+/* ============ TEACHERS SPOTLIGHT DESIGN ============ */
+.teachers-spotlight-card {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+  background: linear-gradient(135deg, rgba(28, 57, 187, 0.12) 0%, rgba(8, 12, 26, 0.7) 100%);
+  border: 1px solid rgba(94, 224, 255, 0.25);
+  border-radius: 24px;
+  padding: 36px 28px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px -15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.teachers-spotlight-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(94, 224, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.teachers-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 30px;
+  background: rgba(94, 224, 255, 0.08);
+  border: 1px solid rgba(94, 224, 255, 0.3);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--electric);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.teachers-names-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.teacher-item {
+  font-family: var(--disp);
+  font-size: clamp(1.2rem, 3.2vw, 1.6rem);
+  font-weight: 700;
+  color: var(--paper);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.teacher-item::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--electric);
+  box-shadow: 0 0 10px var(--electric);
+}
+
+.teacher-divider-dot {
+  color: var(--line3);
+  font-size: 1.4rem;
+}
+
+@media (max-width: 580px) {
+  .teachers-names-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .teacher-divider-dot {
+    display: none;
+  }
+}
+
 /* ---------- Dedicated Scrollbar for Modal Body ---------- */
 .modal-body-pad::-webkit-scrollbar {
   width: 6px;
@@ -458,31 +545,31 @@ const TEAM_SECTIONS = [
   {
     key: "core", title: "Core Committee", cssClass: "section-core", gridClass: "core-grid",
     boxes: [
-      { title: "President", names: ["Anushka Dey"], img: "anushka.jpg" },
-      { title: "Vice President", names: ["Sanjita Kundu"], img: "sanjita.jpg" },
+      { title: "President", names: ["Sanjita Kundu"], img: "sanjita.jpg" },
+      { title: "Vice President", names: ["Anushka Dey"], img: "anushka.jpg" },
       { title: "Supervising Director", names: ["Shreyash Saha"], img: "shreyash.jpg" },
       { title: "Secretary", names: ["Animita Mukherjee", "Priyanshu Sarkar"], img: "secretary.jpg" },
       { title: "PR Head", names: ["Yashika Agarwalla"], img: "yashika.jpg" }
     ]
   },
-  {
+  /*{
     key: "eventheads", title: "Event Heads", cssClass: "section-eventheads", gridClass: "",
     boxes: [
       { title: "Mayavi Mandala", names: ["Person 1", "Person 2"], img: "mayavi_mandala.jpg" },
       { title: "Chitrakatha", names: ["Yuvraj Chowdhary", "Sushmita Jha"], img: "chitrakatha.jpg" },
       { title: "Dharmasangram", names: ["Prisha Arora", "Shreenika Kundu"], img: "dharmasangram.jpg" },
       { title: "Swaranjali", names: ["Spriha Das", "Arya Banerjee"], img: "swaranjali.jpg" },
-      { title: "Vajra Vyuha", names: ["Person 1", "Person 2"], img: "vajra_vyuha.jpg" },
+      { title: "Lakshya Pathik", names: ["Person 1", "Person 2"], img: "lakshya_pathik.jpg" },
       { title: "Chromatica", names: ["Alankrita Upadhyay", "Shaurya Kishore"], img: "chromatica.jpg" },
       { title: "Corpus Vestigium", names: ["Aashna Goyal", "Vanshika Paul"], img: "corpus_vestigium.jpg" },
       { title: "\u03c0 Infinitum", names: ["Anshuman Sikaria", "Anaya Afaaf"], img: "pi_infinitum.jpg" },
-      { title: "Vox Futura", names: ["Vidhi Bhalotia", "Sneha Panda"], img: "vox_futura.jpg" },
-      { title: "Sylva Metalica", names: ["Person 1", "Person 2"], img: "sylva_metalica.jpg" },
+      { title: "Vox Futuri", names: ["Vidhi Bhalotia", "Sneha Panda"], img: "vox_futura.jpg" },
+      { title: "Astra Syntax", names: ["Person 1", "Person 2"], img: "astra_syntax.jpg" },
       { title: "Clamor Naturae", names: ["Riddhima Bhowmik"], img: "clamor_naturae.jpg" },
       { title: "Terra Cognitio", names: ["Uddalak Nandi"], img: "terra_cognitio.jpg" },
       { title: "Genesis Nova", names: ["Maisha Jalota", "Meher Bhurji"], img: "genesis_nova.jpg" },
       { title: "Ventus Lapidum", names: ["Aryan Sircar", "Atri Pradhan"], img: "ventus_lapidum.jpg" },
-      { title: "Astra Syntax", names: ["Person 1", "Person 2"], img: "astra_syntax.jpg" }
+      { title: "Green Grid", names: ["Person 1", "Person 2"], img: "green_grid.jpg" }
     ]
   },
   {
@@ -497,11 +584,11 @@ const TEAM_SECTIONS = [
       { title: "Hospitality + Food", names: ["Aratrika Mitra", "Laiba Hashmi"], img: "hospitality.jpg" },
       { title: "Social Media Admin", names: ["Person 1", "Person 2"], img: "social_media.jpg" }
     ]
-  },
+  },*/
   {
-    key: "teachers", title: "Teachers", cssClass: "section-teachers", gridClass: "core-grid",
+    key: "teachers", title: "Teachers", cssClass: "section-teachers", gridClass: "",
     boxes: [
-      { title: "Teacher In-Charges", names: ["Sanchita Nandy", "Rajarshi Dasgupta"], img: "teachers.jpg" }
+      { title: "Teacher In-Charges", names: ["Rajarshi Dasgupta", "Sanchita Nandy"], img: "" }
     ]
   }
 ];
@@ -529,6 +616,25 @@ function renderBox(box){
 }
 
 function renderSection(sec){
+  if (sec.key === 'teachers') {
+    const teacherData = sec.boxes[0];
+    return `
+      <section class="section-block ${sec.cssClass} reveal">
+        <div class="wrap">
+          <div class="section-heading-wrap"><h2 class="section-heading">${sec.title}</h2></div>
+          <div class="teachers-spotlight-card">
+            <div class="teachers-badge">${teacherData.title}</div>
+            <div class="teachers-names-row">
+              <span class="teacher-item">${teacherData.names[0]}</span>
+              <span class="teacher-divider-dot">&bull;</span>
+              <span class="teacher-item">${teacherData.names[1]}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="wrap"><div class="section-divider"></div></div>`;
+  }
+
   return `
     <section class="section-block ${sec.cssClass} reveal">
       <div class="wrap">

@@ -100,6 +100,25 @@ section{position:relative;z-index:2;padding:50px 0;}
   pointer-events: auto;
   transform: translateY(0);
 }
+/* ---------- Dedicated Scrollbar for Modal Body ---------- */
+.modal-body-pad::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body-pad::-webkit-scrollbar-track {
+  background: rgba(9, 13, 26, 0.6);
+  border-radius: 0 0 16px 0;
+  margin: 12px 0;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb {
+  background: rgba(94, 224, 255, 0.25);
+  border-radius: 10px;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+}
 
 .page-hero{padding:160px 0 20px;text-align:center;}
 .page-hero .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--faint);text-transform:uppercase;}

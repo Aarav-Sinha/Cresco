@@ -220,6 +220,25 @@ section{position:relative;z-index:2;padding:60px 0;}
 /* ambient rotating decoration */
 .ambient-ring{position:absolute;inset:-6%;border-radius:50%;border:1px dashed rgba(140,170,255,.12);animation:ambientSpin 90s linear infinite;pointer-events:none;}
 @keyframes ambientSpin{to{transform:rotate(360deg);}}
+/* ---------- Dedicated Scrollbar for Modal Body ---------- */
+.modal-body-pad::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body-pad::-webkit-scrollbar-track {
+  background: rgba(9, 13, 26, 0.6);
+  border-radius: 0 0 16px 0;
+  margin: 12px 0;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb {
+  background: rgba(94, 224, 255, 0.25);
+  border-radius: 10px;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+}
 
 /* ============ EVENT LIST ============ */
 .list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
@@ -544,11 +563,11 @@ const DAYS = {
       {time:"10:30", end:"14:00", title:"Genesis Nova", venue:"Classroom 12 B", world:"environment"},
       {time:"10:30", end:"14:00", title:"Vox Futuri", venue:"Aerobay Lab", world:"environment"},
       {time:"10:30", end:"14:00", title:"Green Grid", venue:"Senior Computer Lab 1", world:"environment"},
-      {time:"10:30", end:"14:00", title:"Lakshya Pathik", venue:"AI & Robotics Lab", world:"mythology"},
+      {time:"10:30", end:"14:00", title:"Lakshya Pathik", venue:"AI & Robotics Lab", world:"myth"},
       {time:"10:30", end:"13:30", title:"Ventus Lapidum", venue:"Senior Physics Lab", world:"environment"},
       {time:"10:30", end:"13:30", title:"Corpus Vestigium", venue:"Classroom 12 C", world:"cosmos"},
       {time:"11:30", end:"14:00", title:"Terra Cognitio", venue:"Hall 1", world:"environment"},
-      {time:"11:00", end:"13:30", title:"Mayavi Mandala", venue:"Senior Computer Lab 2", world:"mythology"}
+      {time:"11:00", end:"13:30", title:"Mayavi Mandala", venue:"Senior Computer Lab 2", world:"myth"}
 
     ]
   },
@@ -562,7 +581,7 @@ const DAYS = {
       {time:"09:00", end:"12:00", title:"Astra Syntax", venue:"Senior Computer Lab 1", world:"cosmos"},
       {time:"09:00", end:"12:00", title:"pi infinitium", venue:"Classroom 12 C", world:"cosmos"},
       {time:"09:00", end:"12:00", title:"Chitrakatha", venue:"Classroom 12 A", world:"cosmos"},
-      {time:"17:00", end:"18:00", title:"Closing Ceremony & Prizes", venue:"Auditorium", world:"Ceremony"}
+      {time:"17:00", end:"18:00", title:"Closing Ceremony & Prizes", venue:"Auditorium", world:"core"}
     ]
   }
 };
