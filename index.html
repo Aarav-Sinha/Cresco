@@ -37,6 +37,25 @@ a{color:inherit;text-decoration:none;} img{max-width:100%;display:block;} ul,ol{
 button{font:inherit;}
 
 #field{position:fixed;inset:0;z-index:0;pointer-events:none;}
+/* ---------- Dedicated Scrollbar for Modal Body ---------- */
+.modal-body-pad::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body-pad::-webkit-scrollbar-track {
+  background: rgba(9, 13, 26, 0.6);
+  border-radius: 0 0 16px 0;
+  margin: 12px 0;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb {
+  background: rgba(94, 224, 255, 0.25);
+  border-radius: 10px;
+}
+
+.modal-body-pad::-webkit-scrollbar-thumb:hover {
+  background: var(--electric);
+}
 .scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.028) 0px,rgba(255,255,255,.028) 1px,transparent 1px,transparent 3px);}
 .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px;}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 40% at 82% -6%, rgba(28,57,187,.18), transparent 60%),radial-gradient(ellipse 46% 36% at -4% 30%, rgba(94,224,255,.08), transparent 60%),radial-gradient(ellipse 50% 42% at 50% 112%, rgba(239,74,90,.05), transparent 60%);}
@@ -493,7 +512,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 30px;position:relative;z-
             <li>Chitrakatha <span></span></li>
             <li>Dharmasangram <span></span></li>
             <li>Swaranjali <span></span></li>
-            <li>Vajra Vyuha <span></span></li>
+            <li>Lakshya Pathik <span></span></li>
           </ul>
         </a>
         <a href="events.html" class="world-card" data-w="cosmos">
@@ -505,8 +524,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 30px;position:relative;z-
             <li>Chromatica <span></span></li>
             <li>Corpus Vestigium <span></span></li>
             <li>&pi;&middot;Infinitum <span></span></li>
-            <li>Astra Cognitio <span></span></li>
-            <li>Sylva Metalica <span></span></li>
+            <li>Terra Cognitio <span></span></li>
+            <li>Astra Syntax <span></span></li>
           </ul>
         </a>
         <a href="events.html" class="world-card" data-w="eco">
@@ -516,10 +535,10 @@ footer{border-top:1px solid var(--line);padding:80px 0 30px;position:relative;z-
           <p class="wc-desc">Science with a conscience — drama, journalism, genetics and architecture.</p>
           <ul class="world-events">
             <li>Clamor Naturae <span></span></li>
-            <li>Viridis Vox <span></span></li>
+            <li>Vox Futuri <span></span></li>
             <li>Genesis Nova <span></span></li>
             <li>Ventus Lapidum <span></span></li>
-            <li>Astra Syntax <span></span></li>
+            <li>Green Grid <span></span></li>
           </ul>
         </a>
       </div>
